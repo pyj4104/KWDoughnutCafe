@@ -1,4 +1,4 @@
-#!/Users/yeounjunpark/Desktop/CurrentWork/KWDoughnutCafe/Doughnut/bin/python3
+#!/Users/yeounjunpark/Desktop/CurrentWork/KWDoughnutCafe/venv/bin/python3.4
 
 # -*- coding: utf-8 -*-
 import re
