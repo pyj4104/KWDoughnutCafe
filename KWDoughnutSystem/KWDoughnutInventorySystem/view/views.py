@@ -11,7 +11,6 @@ class WikiPage(colander.MappingSchema):
         widget=deform.widget.RichTextWidget()
     )
 
-
 class WikiViews(object):
     def __init__(self, request):
         self.request = request
@@ -41,11 +40,13 @@ class WikiViews(object):
     @view_config(route_name='submitOrder')
     def submitOrder(self):
         controls = self.request.POST
-        DBSession.add(TransHistory(1, 1, controls['boxQuantity'], controls['doughnutQuantity']))
-        if not('submit' in self.request.POST):
-            url = self.request.route_url('welcome')
+        if ('defer' in controls):
+            defer = controls['defer']
         else:
-            url = self.request.route_url('sellerpage')
+            defer = False
+        if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
+            DBSession.add(TransHistory(1, 1, controls['boxQuantity'], controls['doughnutQuantity'], defer))
+        url = self.request.route_url('sellerpage')
         return HTTPFound(url)
 
     """@view_config(route_name='wiki_view', renderer='wiki_view.pt')

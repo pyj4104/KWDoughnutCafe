@@ -40,12 +40,13 @@ class TransHistory(Base):
     deleted = Column("deleted", mysql.BIT, nullable=False, default=0)
     deferredPayment = Column("deferredPayment", mysql.BIT, nullable=False, default=0)
 
-    def __init__(self, pschema, seller, boxes, doughnuts):
+    def __init__(self, pschema, seller, boxes, doughnuts, deferredPayment):
         self.schemeID = pschema
         self.sellerID = seller
         self.timeSold = datetime.datetime.now()
         self.boxesSold = boxes
         self.doughnutsSold = doughnuts
+        self.deferredPayment = 1 if deferredPayment else 0
 
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),

@@ -60,13 +60,11 @@ class WikiViews(object):
 
         return dict(form=form)
 
-
     @view_config(route_name='wikipage_view', renderer='wikipage_view.pt')
     def wikipage_view(self):
         uid = int(self.request.matchdict['uid'])
         page = DBSession.query(Page).filter_by(uid=uid).one()
         return dict(page=page)
-
 
     @view_config(route_name='wikipage_edit',
                  renderer='wikipage_addedit.pt')
