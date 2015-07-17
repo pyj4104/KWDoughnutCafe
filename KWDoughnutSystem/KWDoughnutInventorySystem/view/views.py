@@ -90,7 +90,7 @@ class WikiViews(object):
         if ('userID' in session and session['userID']!=''):
             history = DBSession.query(TransHistory.tid, TransHistory.timeSold, User.name, TransHistory.boxesSold,
                 TransHistory.doughnutsSold, TransHistory.deferredPayment, PriceScheme.boxPrice,
-                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0)
+                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0).order_by(desc(TransHistory.tid))
             return {'histories':history.all()}
         else:
             return HTTPFound(self.request.route_url('login'))
@@ -104,7 +104,7 @@ class WikiViews(object):
                 func.sum(TransHistory.doughnutsSold),
                 PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0)
             hi = stats1.first()
-            initBoxes = 239
+            initBoxes = 233
             boxSold = hi[0]
             doughnutsSold = hi[1]
             openedBoxes = math.ceil(doughnutsSold / 12)
