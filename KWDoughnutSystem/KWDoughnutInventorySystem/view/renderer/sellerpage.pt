@@ -17,6 +17,14 @@
             document.getElementById(target).value = (ori > 0) ? ori - 1 : 0;
         }
     </script>
+    <style>
+        div {
+            width: 100%;
+            padding: 25px;
+            border: 25px;
+            margin: 25px;
+        }
+    </style>
 </head>
 <body>
   <div>
