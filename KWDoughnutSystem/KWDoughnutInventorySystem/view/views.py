@@ -1,6 +1,9 @@
 import colander
 import deform.widget
+import math
+import decimal
 from sqlalchemy import update
+from sqlalchemy.sql import func
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from KWDoughnutInventorySystem.model.models import DBSession, Page, TransHistory, User, PriceScheme
@@ -74,10 +77,9 @@ class WikiViews(object):
                     defer = False
                 if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
                     DBSession.add(TransHistory(1, int(self.request.session["userID"]), controls['boxQuantity'], controls['doughnutQuantity'], defer))
-                url = self.request.route_url('sellerpage')
-                return HTTPFound(url)
+                return {"msg":"Transaction Successful"}
             else:
-                return {"":""}
+                return {"msg":""}
         else:
             return HTTPFound(self.request.route_url('login'))
 
@@ -89,6 +91,27 @@ class WikiViews(object):
                 TransHistory.doughnutsSold, TransHistory.deferredPayment, PriceScheme.boxPrice,
                 PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0)
             return {'histories':history.all()}
+        else:
+            return HTTPFound(self.request.route_url('login'))
+
+    @view_config(route_name='statistics', renderer='./renderer/statistics.pt')
+    def statistics(self):
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            stats1 = DBSession.query(func.sum(TransHistory.boxesSold),
+                func.sum(TransHistory.doughnutsSold),
+                PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0)
+            hi = stats1.first()
+            boxSold = hi[0]
+            doughnutsSold = hi[1]
+            openedBoxes = math.ceil(doughnutsSold / 12)
+            boxesLeft = 300 - boxSold - openedBoxes
+            moneyEarned = boxSold * decimal.Decimal(hi[2]) + doughnutsSold * decimal.Decimal(hi[3])
+            profit = 0
+            inv = 0
+            return {'initBoxes':300, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
+            'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':moneyEarned,
+            'inv':0, 'profit':0}
         else:
             return HTTPFound(self.request.route_url('login'))
 

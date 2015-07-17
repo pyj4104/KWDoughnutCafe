@@ -30,3 +30,4 @@ CREATE TABLE transHistory
 );
 
 INSERT INTO priceScheme VALUES (1, 10.00, 1.00);
+INSERT INTO transHistory VALUES (0, 1, 1, NOW(), 0, 0, 0, 0, 'admin');

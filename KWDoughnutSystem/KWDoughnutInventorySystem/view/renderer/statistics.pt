@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>KW Doughnut System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <style>
+        div {
+            width: 100%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <a href="${request.application_url}/logout">Log Out</a>
+    <a href="${request.application_url}/seller">Seller Page</a>
+    <h1>Statistics</h1>
+    <span>Initial Number of Boxes: <p tal:content='initBoxes'></p></span>
+    <span>Boxes Sold: <p tal:content='soldBoxes'></p></span>
+    <span>Individual Doughnuts Sold: <p tal:content='soldDoughnuts'></p></span>
+    <span>Opened Boxes: <p tal:content='openBoxes'></p></span>
+    <span>Number of Boxes Left: <p tal:content='boxesLeft'></p></span>
+    <span>Money Earned: <p tal:content='monEarned'></p></span>
+    <span>Initial Investment: <p tal:content='inv'></p></span>
+    <span>Profit: <p tal:content='profit'></p></span>
+  </div>
+</body>
+</html>

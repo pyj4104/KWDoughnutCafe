@@ -18,6 +18,7 @@ def main(global_config, **settings):
     config.add_route('sellerpage', '/seller')
     config.add_route('transHistory', '/history')
     config.add_route('delete', '/delete')
+    config.add_route('statistics', '/statistics')
     '''config.add_route('wikipage_add', '/add')
     config.add_route('wikipage_view', '/{uid}')
     config.add_route('wikipage_edit', '/{uid}/edit')'''
