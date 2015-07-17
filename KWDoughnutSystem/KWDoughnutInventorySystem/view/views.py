@@ -7,6 +7,7 @@ from sqlalchemy.sql import func
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from KWDoughnutInventorySystem.model.models import DBSession, Page, TransHistory, User, PriceScheme
+import locale
 
 class WikiPage(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
@@ -95,7 +96,8 @@ class WikiViews(object):
             return HTTPFound(self.request.route_url('login'))
 
     @view_config(route_name='statistics', renderer='./renderer/statistics.pt')
-    def statistics(self):
+    def statistics(self): 
+        locale.setlocale( locale.LC_ALL, 'en_CA.UTF-8' )
         session = self.request.session
         if ('userID' in session and session['userID']!=''):
             stats1 = DBSession.query(func.sum(TransHistory.boxesSold),
@@ -107,7 +109,7 @@ class WikiViews(object):
             doughnutsSold = hi[1]
             openedBoxes = math.ceil(doughnutsSold / 12)
             boxesLeft = initBoxes - boxSold - openedBoxes
-            moneyEarned = boxSold * decimal.Decimal(hi[2]) + doughnutsSold * decimal.Decimal(hi[3])
+            moneyEarned = locale.currency(boxSold * decimal.Decimal(hi[2]) + doughnutsSold * decimal.Decimal(hi[3]))
             profit = 0
             inv = 0
             return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
