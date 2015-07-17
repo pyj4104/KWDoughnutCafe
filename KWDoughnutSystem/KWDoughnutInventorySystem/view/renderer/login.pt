@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Quick Tutorial: ${name}</title>
+    <title>KW Doughnut System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 <body>
 <h1>Login</h1>
 <span tal:replace="message"/>
 
-<form action="${url}" method="post">
-    <input type="hidden" name="came_from"
-           value="${came_from}"/>
+<form action="login" method="post">
     <label for="login">Username</label>
     <input type="text" id="login"
-           name="login"
-           value="${login}"/><br/>
+           name="login"/><br/>
     <label for="password">Password</label>
     <input type="password" id="password"
-           name="password"
-           value="${password}"/><br/>
+           name="password"/><br/>
     <input type="submit" name="form.submitted"
            value="Log In"/>
 </form>

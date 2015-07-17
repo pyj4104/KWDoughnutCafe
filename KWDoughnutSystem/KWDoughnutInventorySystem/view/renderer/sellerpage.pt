@@ -47,9 +47,11 @@
     </style>
 </head>
 <body>
+  <a href="${request.application_url}/logout">Log Out</a>
+  <a href="${request.application_url}/history">Transaction History</a>
   <div>
     <h1>Seller</h1>
-    <form method="post" action="submitOrder">
+    <form method="post" action="seller">
         <span>
             <p>Quantity of Box<br/>
                 <input type="button" value="-" name='boxDec' onclick="decrease('boxQnt')" class="qntCont" />
@@ -66,7 +68,7 @@
         </span>
         <span><input type="checkbox" name="defer" value=0 class="defer">   Defer Payment</span><br><br>
         <span>
-            <input type="submit" value="Submit" class="etc" />
+            <input type="submit" value="Submit" name="submit" class="etc" />
             <input type="button" value="Reset" onClick="reset()" class="etc" />
         </span>
     </form>

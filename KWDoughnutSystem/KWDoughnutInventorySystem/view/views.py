@@ -1,8 +1,9 @@
 import colander
 import deform.widget
+from sqlalchemy import update
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
-from KWDoughnutInventorySystem.model.models import DBSession, Page, TransHistory
+from KWDoughnutInventorySystem.model.models import DBSession, Page, TransHistory, User, PriceScheme
 
 class WikiPage(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
@@ -30,24 +31,66 @@ class WikiViews(object):
 
     @view_config(route_name='login', renderer='./renderer/login.pt')
     def login(self):
-        url = self.request.route_url('welcome')
-        return HTTPFound(url)
+        session = self.request.session
+        if('userID' not in session or session['userID']==''):
+            controls = self.request.POST
+            if('form.submitted' in self.request.POST):
+                info = DBSession.query(User.uid).filter(User.name==controls['login'],
+                                     User.password==controls['password'])
+                if (DBSession.query(info.exists())):
+                    session["userID"] = info.scalar()
+                    return HTTPFound(self.request.route_url('sellerpage'))
+                else:
+                    return HTTPFound(self.request.route_url('welcome'))
+            else:
+                return {"message":"Please Log In"}
+        else:
+            return HTTPFound(self.request.route_url('sellerpage'))
+
+    @view_config(route_name='logout')
+    def logout(self):
+        session = self.request.session
+        session["userID"] = ''
+        return HTTPFound(self.request.route_url('welcome'))
+
+    @view_config(route_name='delete')
+    def delete(self):
+        controls = self.request.GET
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            DBSession.query(TransHistory).filter(TransHistory.tid==int(controls['tid'])).update({TransHistory.deleted:1,
+                TransHistory.deletedUsrInit:(DBSession.query(User.name).filter(User.uid==session['userID']).scalar())})
+        return HTTPFound(self.request.route_url('transHistory'))
 
     @view_config(route_name='sellerpage', renderer='./renderer/sellerpage.pt')
     def seller(self):
-        return {'':''}
-
-    @view_config(route_name='submitOrder')
-    def submitOrder(self):
-        controls = self.request.POST
-        if ('defer' in controls):
-            defer = controls['defer']
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            controls = self.request.POST
+            if ('submit' in self.request.POST):
+                if ('defer' in controls):
+                    defer = controls['defer']
+                else:
+                    defer = False
+                if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
+                    DBSession.add(TransHistory(1, int(self.request.session["userID"]), controls['boxQuantity'], controls['doughnutQuantity'], defer))
+                url = self.request.route_url('sellerpage')
+                return HTTPFound(url)
+            else:
+                return {"":""}
         else:
-            defer = False
-        if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
-            DBSession.add(TransHistory(1, 1, controls['boxQuantity'], controls['doughnutQuantity'], defer))
-        url = self.request.route_url('sellerpage')
-        return HTTPFound(url)
+            return HTTPFound(self.request.route_url('login'))
+
+    @view_config(route_name='transHistory', renderer='./renderer/history.pt')
+    def transHistory(self):
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            history = DBSession.query(TransHistory.tid, TransHistory.timeSold, User.name, TransHistory.boxesSold,
+                TransHistory.doughnutsSold, TransHistory.deferredPayment, PriceScheme.boxPrice,
+                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0)
+            return {'histories':history.all()}
+        else:
+            return HTTPFound(self.request.route_url('login'))
 
     """@view_config(route_name='wiki_view', renderer='wiki_view.pt')
     def wiki_view(self):

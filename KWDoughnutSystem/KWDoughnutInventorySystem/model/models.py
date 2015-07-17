@@ -39,6 +39,7 @@ class TransHistory(Base):
     doughnutsSold = Column("doughnutsSold", mysql.INTEGER, nullable=False, default=0)
     deleted = Column("deleted", mysql.BIT, nullable=False, default=0)
     deferredPayment = Column("deferredPayment", mysql.BIT, nullable=False, default=0)
+    deletedUsrInit = Column("deletedUsrInit", mysql.NVARCHAR(20))
 
     def __init__(self, pschema, seller, boxes, doughnuts, deferredPayment):
         self.schemeID = pschema
