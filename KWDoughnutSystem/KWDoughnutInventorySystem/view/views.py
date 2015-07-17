@@ -2,7 +2,7 @@ import colander
 import deform.widget
 import math
 import decimal
-from sqlalchemy import update, desc
+from sqlalchemy import update, desc, asc
 from sqlalchemy.sql import func
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
@@ -90,7 +90,7 @@ class WikiViews(object):
         if ('userID' in session and session['userID']!=''):
             history = DBSession.query(TransHistory.tid, TransHistory.timeSold, User.name, TransHistory.boxesSold,
                 TransHistory.doughnutsSold, TransHistory.deferredPayment, PriceScheme.boxPrice,
-                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0).order_by(desc(TransHistory.tid))
+                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0).order_by(asc(TransHistory.tid))
             return {'histories':history.all()}
         else:
             return HTTPFound(self.request.route_url('login'))
