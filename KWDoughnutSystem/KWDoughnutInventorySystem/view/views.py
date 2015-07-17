@@ -2,7 +2,7 @@ import colander
 import deform.widget
 import math
 import decimal
-from sqlalchemy import update
+from sqlalchemy import update, desc
 from sqlalchemy.sql import func
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
