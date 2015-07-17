@@ -102,14 +102,15 @@ class WikiViews(object):
                 func.sum(TransHistory.doughnutsSold),
                 PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0)
             hi = stats1.first()
+            initBoxes = 239
             boxSold = hi[0]
             doughnutsSold = hi[1]
             openedBoxes = math.ceil(doughnutsSold / 12)
-            boxesLeft = 300 - boxSold - openedBoxes
+            boxesLeft = initBoxes - boxSold - openedBoxes
             moneyEarned = boxSold * decimal.Decimal(hi[2]) + doughnutsSold * decimal.Decimal(hi[3])
             profit = 0
             inv = 0
-            return {'initBoxes':300, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
+            return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
             'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':moneyEarned,
             'inv':0, 'profit':0}
         else:
