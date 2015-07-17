@@ -1,4 +1,4 @@
-#!/Users/yeounjunpark/Desktop/CurrentWork/KWDoughnutCafe/venv/bin/python
+#!/Users/yeounjunpark/Desktop/CurrentWork/KWDoughnutCafe/venv/bin/python3
 # EASY-INSTALL-ENTRY-SCRIPT: 'pyramid==1.5.7','console_scripts','ptweens'
 __requires__ = 'pyramid==1.5.7'
 import sys

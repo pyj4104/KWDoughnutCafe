@@ -1,0 +1,14 @@
+MANIFEST.in
+setup.py
+KWDoughnutInventorySystem.egg-info/PKG-INFO
+KWDoughnutInventorySystem.egg-info/SOURCES.txt
+KWDoughnutInventorySystem.egg-info/dependency_links.txt
+KWDoughnutInventorySystem.egg-info/entry_points.txt
+KWDoughnutInventorySystem.egg-info/requires.txt
+KWDoughnutInventorySystem.egg-info/top_level.txt
+KWDoughnutInventorySystem/model/
+KWDoughnutInventorySystem/model/.
+KWDoughnutInventorySystem/model/__init__.py
+KWDoughnutInventorySystem/model/models.py
+KWDoughnutInventorySystem/view/__init__.py
+KWDoughnutInventorySystem/view/views.py

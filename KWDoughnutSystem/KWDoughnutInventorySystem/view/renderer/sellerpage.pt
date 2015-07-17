@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>KW Doughnut System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+  <div>
+    <h1>Seller</h1>
+    <form method="post" action="submitOrder">
+        <span><p>Quantity of Box <input type="numeric" name="boxQuantity"/></p></span>
+        <span><p>Quantity of Doughnut <input type="numeric" name="doughnutQuantity"/></p></span>
+        <span><input type="checkbox" name="defer" value="Defer Payment">Defer Payment</span><br>
+        <span><input type="submit" value="Submit"><input type="reset" value="Reset"></span>
+    </form>
+  </div>
+</body>
+</html>

@@ -9,12 +9,14 @@ requires = [
     'zope.sqlalchemy'
 ]
 
-setup(name='DoughnutSystem',
+setup(name='KWDoughnutInventorySystem',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = DoughnutSystem:main
+      main = KWDoughnutInventorySystem:main
       [console_scripts]
-      initialize_tutorial_db = DoughnutSystem.initialize_db:main
+      initialize_tutorial_db = KWDoughnutInventorySystem.initialize_db:main
       """,
+      packages=['model', 'view'],
+      package_dir={'model': 'KWDoughnutInventorySystem/model', 'view': 'KWDoughnutInventorySystem/view'},
 )
