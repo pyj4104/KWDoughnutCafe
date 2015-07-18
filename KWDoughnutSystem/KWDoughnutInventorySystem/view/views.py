@@ -103,21 +103,25 @@ class WikiViews(object):
         locale.setlocale( locale.LC_ALL, 'en_CA.UTF-8' )
         session = self.request.session
         if ('userID' in session and session['userID']!=''):
-            stats1 = DBSession.query(func.sum(TransHistory.boxesSold),
+            stats = DBSession.query(func.sum(TransHistory.boxesSold),
                 func.sum(TransHistory.doughnutsSold),
                 PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0).group_by(PriceScheme.tid).all()
-            hi = stats1.first()
-            initBoxes = 233
-            boxSold = hi[0]
-            doughnutsSold = hi[1]
+            initBoxes = 300
+            boxSold = 0
+            doughnutsSold = 0
+            profit = 0
+            inv = 1425
+            moneyEarned = 0
+            for scheme in stats:
+                boxSold += scheme[0]
+                doughnutsSold += scheme[1]
+                moneyEarned += scheme[0] * decimal.Decimal(scheme[2]) + scheme[1] * decimal.Decimal(scheme[3])
             openedBoxes = math.ceil(doughnutsSold / 12)
             boxesLeft = initBoxes - boxSold - openedBoxes
-            moneyEarned = locale.currency(boxSold * decimal.Decimal(hi[2]) + doughnutsSold * decimal.Decimal(hi[3]))
-            profit = 0
-            inv = 0
+            profit = locale.currency(moneyEarned-inv)
             return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
-            'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':moneyEarned,
-            'inv':0, 'profit':0}
+            'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':locale.currency(moneyEarned),
+            'inv':locale.currency(inv), 'profit':profit}
         else:
             return HTTPFound(self.request.route_url('login'))
 
