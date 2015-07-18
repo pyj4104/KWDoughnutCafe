@@ -2,11 +2,12 @@ import colander
 import deform.widget
 import math
 import decimal
+from datetime import datetime
 from sqlalchemy import update, desc, asc
 from sqlalchemy.sql import func
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
-from KWDoughnutInventorySystem.model.models import DBSession, Page, TransHistory, User, PriceScheme
+from KWDoughnutInventorySystem.model.models import DBSession, Page, TransHistory, User, PriceScheme, Donation
 import locale
 
 class WikiPage(colander.MappingSchema):
@@ -72,16 +73,18 @@ class WikiViews(object):
         if ('userID' in session and session['userID']!=''):
             controls = self.request.POST
             if ('submit' in self.request.POST):
-                try:
-                    if ('defer' in controls):
-                        defer = controls['defer']
-                    else:
-                        defer = False
-                    if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
-                        DBSession.add(TransHistory(int(controls['scheme']), int(self.request.session["userID"]), controls['boxQuantity'], controls['doughnutQuantity'], defer))
-                    return {"msg":"Transaction Successful"}
-                except:
-                    return {"msg":"Something went wrong"}
+                if ('defer' in controls):
+                    defer = controls['defer']
+                else:
+                    defer = False
+                if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
+                    DBSession.add(TransHistory(int(controls['scheme']), int(self.request.session["userID"]), controls['boxQuantity'], controls['doughnutQuantity'], defer))
+                if ('donation' in controls and (controls['donation']!='' and float(controls['donation'])>0)):
+                    donor = ''
+                    if('donor' in controls):
+                        donor = controls['donor']
+                    DBSession.add(Donation(controls['donation'], donor))
+                return {"msg":"Transaction Successful"}
             else:
                 return {"msg":""}
         else:
@@ -93,10 +96,27 @@ class WikiViews(object):
         if ('userID' in session and session['userID']!=''):
             history = DBSession.query(TransHistory.tid, TransHistory.timeSold, User.name, TransHistory.boxesSold,
                 TransHistory.doughnutsSold, TransHistory.deferredPayment, PriceScheme.boxPrice,
-                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0).order_by(asc(TransHistory.tid))
+                PriceScheme.doughnutPrice, TransHistory.deleted).join(User).join(PriceScheme).filter(TransHistory.deleted==0).order_by(desc(TransHistory.tid))
             return {'histories':history.all()}
         else:
             return HTTPFound(self.request.route_url('login'))
+
+    @view_config(route_name='dhistory', renderer='./renderer/dhistory.pt')
+    def donationHistory(self):
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            history = DBSession.query(Donation.tid, Donation.timeDonated, Donation.donor, Donation.amount).filter(Donation.deleted==0).order_by(desc(Donation.tid))
+            return {'histories':history.all()}
+        else:
+            return HTTPFound(self.request.route_url('login'))
+
+    @view_config(route_name='deleteDonation')
+    def deleteDonation(self):
+        controls = self.request.GET
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            DBSession.query(Donation).filter(Donation.tid==int(controls['tid'])).update({Donation.deleted:1})
+        return HTTPFound(self.request.route_url('dhistory'))
 
     @view_config(route_name='statistics', renderer='./renderer/statistics.pt')
     def statistics(self): 
@@ -106,6 +126,8 @@ class WikiViews(object):
             stats = DBSession.query(func.sum(TransHistory.boxesSold),
                 func.sum(TransHistory.doughnutsSold),
                 PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0).group_by(PriceScheme.tid).all()
+            douhnutsSoldToday = DBSession.query(func.sum(TransHistory.boxesSold)).filter(TransHistory.deleted==0).filter(TransHistory.timeSold >= datetime.today().date()).scalar()
+            donatedAmount = DBSession.query(func.sum(Donation.amount)).filter(Donation.deleted==0).scalar()
             initBoxes = 300
             boxSold = 0
             doughnutsSold = 0
@@ -118,10 +140,11 @@ class WikiViews(object):
                 moneyEarned += scheme[0] * decimal.Decimal(scheme[2]) + scheme[1] * decimal.Decimal(scheme[3])
             openedBoxes = math.ceil(doughnutsSold / 12)
             boxesLeft = initBoxes - boxSold - openedBoxes
-            profit = locale.currency(moneyEarned-inv)
+            profit = float(moneyEarned-inv)
             return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
             'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':locale.currency(moneyEarned),
-            'inv':locale.currency(inv), 'profit':profit}
+            'inv':locale.currency(inv), 'doughnutprofit':locale.currency(profit), 'soldToday':douhnutsSoldToday-24, 'donation':locale.currency(donatedAmount),
+            'profit':locale.currency(profit+donatedAmount)}
         else:
             return HTTPFound(self.request.route_url('login'))
 

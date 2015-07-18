@@ -53,6 +53,19 @@ class TransHistory(Base):
         self.doughnutsSold = doughnuts
         self.deferredPayment = 1 if deferredPayment else 0
 
+class Donation(Base):
+    __tablename__ = "donation"
+    tid = Column("ID", Integer, primary_key=True, autoincrement=True)
+    timeDonated = Column("timeDonated", TIMESTAMP)
+    amount = Column("Amount", mysql.FLOAT(9,2))
+    donor = Column("Donor", mysql.NVARCHAR(100))
+    deleted = Column("deleted", mysql.BIT, nullable=False, default=0)
+
+    def __init__(self, money, donor):
+        self.timeDonated = datetime.datetime.now()
+        self.amount = money
+        self.donor = donor
+
 class Root(object):
     __acl__ = [(Allow, Everyone, 'view'),
                (Allow, 'group:editors', 'edit')]

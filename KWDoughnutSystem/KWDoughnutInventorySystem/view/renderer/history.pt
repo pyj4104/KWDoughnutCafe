@@ -8,6 +8,8 @@
 <body>
 <a href="${request.application_url}/logout">Log Out</a>
 <a href="${request.application_url}/seller">Seller Page</a>
+<a href="${request.application_url}/dhistory">Donation History</a>
+<a href="${request.application_url}/statistics">Statistics</a>
 <h1>Login</h1>
   <div>
     <table style="width:100%">

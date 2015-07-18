@@ -28,6 +28,17 @@ CREATE TABLE transHistory
     FOREIGN KEY (schemeID) REFERENCES priceScheme(ID),
     FOREIGN KEY (sellerID) REFERENCES usr(ID)
 );
+CREATE TABLE donation
+(
+    ID INT NOT NULL AUTO_INCREMENT,
+    timeDonated TIMESTAMP,
+    Amount FLOAT(9,2),
+    Donor NVARCHAR(100),
+    deleted BIT NOT NULL DEFAULT 0,
+    PRIMARY KEY(ID)
+);
+
+14.25
 
 INSERT INTO priceScheme VALUES (1, 10.00, 1.00);
 INSERT INTO transHistory VALUES (0, 1, 1, NOW(), 0, 0, 0, 0, 'admin');
