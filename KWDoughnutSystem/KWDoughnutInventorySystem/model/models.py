@@ -29,6 +29,10 @@ class PriceScheme(Base):
     boxPrice = Column("boxPrice", mysql.FLOAT(5,2))
     doughnutPrice = Column("doughnutPrice", mysql.FLOAT(4,2))
 
+    def __init__(self, box, doughnut):
+        self.boxPrice = box
+        self.doughnutPrice = doughnut
+
 class TransHistory(Base):
     __tablename__ = 'transHistory'
     tid = Column("ID", Integer, primary_key=True, autoincrement=True)

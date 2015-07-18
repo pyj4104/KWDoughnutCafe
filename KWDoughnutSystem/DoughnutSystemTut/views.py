@@ -6,14 +6,12 @@ from pyramid.view import view_config
 
 from .models import DBSession, Page
 
-
 class WikiPage(colander.MappingSchema):
     title = colander.SchemaNode(colander.String())
     body = colander.SchemaNode(
         colander.String(),
         widget=deform.widget.RichTextWidget()
     )
-
 
 class WikiViews(object):
     def __init__(self, request):

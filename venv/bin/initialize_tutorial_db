@@ -1,4 +1,4 @@
-#!/Users/yeounjunpark/Desktop/CurrentWork/KWDoughnutCafe/venv/bin/python3
+#!/Users/yeounjunpark/Desktop/CurrentWork/KWDoughnutCafe/venv/bin/python
 # EASY-INSTALL-ENTRY-SCRIPT: 'KWDoughnutInventorySystem==0.0.0','console_scripts','initialize_tutorial_db'
 __requires__ = 'KWDoughnutInventorySystem==0.0.0'
 import sys

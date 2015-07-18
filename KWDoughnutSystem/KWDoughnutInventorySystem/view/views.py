@@ -72,13 +72,16 @@ class WikiViews(object):
         if ('userID' in session and session['userID']!=''):
             controls = self.request.POST
             if ('submit' in self.request.POST):
-                if ('defer' in controls):
-                    defer = controls['defer']
-                else:
-                    defer = False
-                if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
-                    DBSession.add(TransHistory(1, int(self.request.session["userID"]), controls['boxQuantity'], controls['doughnutQuantity'], defer))
-                return {"msg":"Transaction Successful"}
+                try:
+                    if ('defer' in controls):
+                        defer = controls['defer']
+                    else:
+                        defer = False
+                    if (int(controls['boxQuantity']) + int(controls['doughnutQuantity']) >= 1):
+                        DBSession.add(TransHistory(int(controls['scheme']), int(self.request.session["userID"]), controls['boxQuantity'], controls['doughnutQuantity'], defer))
+                    return {"msg":"Transaction Successful"}
+                except:
+                    return {"msg":"Something went wrong"}
             else:
                 return {"msg":""}
         else:
@@ -102,7 +105,7 @@ class WikiViews(object):
         if ('userID' in session and session['userID']!=''):
             stats1 = DBSession.query(func.sum(TransHistory.boxesSold),
                 func.sum(TransHistory.doughnutsSold),
-                PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0)
+                PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0).group_by(PriceScheme.tid).all()
             hi = stats1.first()
             initBoxes = 233
             boxSold = hi[0]
@@ -115,6 +118,23 @@ class WikiViews(object):
             return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
             'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':moneyEarned,
             'inv':0, 'profit':0}
+        else:
+            return HTTPFound(self.request.route_url('login'))
+
+    @view_config(route_name='scheme', renderer='./renderer/pricescheme.pt')
+    def price(self):
+        session = self.request.session
+        if ('userID' in session and session['userID']!=''):
+            controls = self.request.POST
+            if ('submit' in self.request.POST):
+                try:
+                    if (float(controls['boxPrice']) + float(controls['doughnutPrice']) >= 1):
+                        DBSession.add(PriceScheme(controls['boxPrice'], controls['doughnutPrice']))
+                    return {"msg":"Transaction Successful"}
+                except:
+                    return {"msg": "Transaction Unsuccessful. Please contact the server admin."}
+            else:
+                return {"msg":""}
         else:
             return HTTPFound(self.request.route_url('login'))
 

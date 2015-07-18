@@ -68,6 +68,13 @@
                 <input type="button" value="+" name='dInc' onClick="increase('dQnt')" class="qntCont" />
             </p>
         </span>
+        <span>
+            <p>Price Scheme<br/>
+                <input type="button" value="-" name='dDec' onClick="decrease('scheme')" class="qntCont" />
+                <input type="number" min=0 max=100 value=2 name="scheme" ID="scheme"/>
+                <input type="button" value="+" name='dInc' onClick="increase('scheme')" class="qntCont" />
+            </p>
+        </span>
         <span><input type="checkbox" name="defer" value=0 class="defer">   Defer Payment</span><br><br>
         <span>
             <input type="submit" value="Submit" name="submit" class="etc" />

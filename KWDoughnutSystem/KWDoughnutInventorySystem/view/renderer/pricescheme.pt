@@ -1,0 +1,54 @@
+<!DOCTYPE html5>
+<html lang="en">
+<head>
+    <title>KW Doughnut System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <script>
+
+    </script>
+    <style>
+        div {
+            width: 100%;
+            margin: auto;
+        }
+        input.qntCont {
+            width: 50px;
+            height: 40px;
+        }
+        input.defer{
+            transform: scale(2);
+        }
+        p, span{
+            font-size:20px;
+        }
+        input.etc{
+            width: 150px;
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <span>
+        <h1>Seller</h1><p tal:content='msg' style="font-size:12px;"/>
+    <span>
+    <form method="post" action="price">
+        <span>
+            <p>Box Price<br/>
+                <input type="number" step="any" min=0 max=999.99 value=0 name="boxPrice" ID="boxPrice" />
+            </p>
+        </span>
+        <span>
+            <p>Quantity of Doughnut<br/>
+                <input type="number" step="any" min=0.00 max=99.99 value=0 name="doughnutPrice" ID="doughnutPrice"/>
+            </p>
+        </span>
+        <br><br>
+        <span>
+            <input type="submit" value="Submit" name="submit" class="etc" />
+        </span>
+    </form>
+  </div>
+</body>
+</html>
