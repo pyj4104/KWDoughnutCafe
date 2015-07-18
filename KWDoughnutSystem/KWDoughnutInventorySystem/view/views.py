@@ -121,7 +121,7 @@ class WikiViews(object):
             profit = locale.currency(moneyEarned-inv)
             return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
             'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':locale.currency(moneyEarned),
-            'inv':locale.currency(inv), 'profit':locale.currency(profit)}
+            'inv':locale.currency(inv), 'profit':profit}
         else:
             return HTTPFound(self.request.route_url('login'))
 
