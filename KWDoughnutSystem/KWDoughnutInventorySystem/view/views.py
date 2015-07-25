@@ -143,7 +143,7 @@ class WikiViews(object):
             profit = float(moneyEarned-inv)
             return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
             'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':locale.currency(moneyEarned),
-            'inv':locale.currency(inv), 'doughnutprofit':locale.currency(profit), 'soldToday':douhnutsSoldToday-24, 'donation':locale.currency(donatedAmount),
+            'inv':locale.currency(inv), 'doughnutprofit':locale.currency(profit), 'soldToday':douhnutsSoldToday, 'donation':locale.currency(donatedAmount),
             'profit':locale.currency(profit+donatedAmount)}
         else:
             return HTTPFound(self.request.route_url('login'))

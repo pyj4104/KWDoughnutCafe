@@ -37,8 +37,6 @@ CREATE TABLE donation
     deleted BIT NOT NULL DEFAULT 0,
     PRIMARY KEY(ID)
 );
-
-14.25
-
 INSERT INTO priceScheme VALUES (1, 10.00, 1.00);
 INSERT INTO transHistory VALUES (0, 1, 1, NOW(), 0, 0, 0, 0, 'admin');
+INSERT INTO priceScheme VALUES (0, 0, 0);
