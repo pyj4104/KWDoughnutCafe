@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>KW Doughnut System</title>
+</head>
+<body>
+<h1>Welcome</h1>
+<p>Please <a href="${request.route_url('login')}">log in</a></p>
+</body>
+</html>

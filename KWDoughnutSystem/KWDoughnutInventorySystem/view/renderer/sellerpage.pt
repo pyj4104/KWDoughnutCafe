@@ -1,0 +1,95 @@
+<!DOCTYPE html5>
+<html lang="en">
+<head>
+    <title>KW Doughnut System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <script>
+        function increase(target)
+        {
+            var ori = parseInt(document.getElementById(target).value);
+            max = (target == "boxQnt") ? 300 : 3600;
+            document.getElementById(target).value = (ori+1 < max) ? ori + 1 : max;
+        }
+
+        function decrease(target)
+        {
+            var ori = parseInt(document.getElementById(target).value);
+            document.getElementById(target).value = (ori > 0) ? ori - 1 : 0;
+        }
+
+        function reset()
+        {
+            document.getElementById("boxQnt").value = 0;
+            document.getElementById("dQnt").value = 0;
+        }
+    </script>
+    <style>
+        div {
+            width: 100%;
+            margin: auto;
+        }
+        input.qntCont {
+            width: 50px;
+            height: 40px;
+        }
+        input.defer{
+            transform: scale(2);
+        }
+        p, span{
+            font-size:20px;
+        }
+        input.etc{
+            width: 150px;
+            height: 60px;
+        }
+    </style>
+</head>
+<body>
+      <a href="${request.application_url}/logout">Log Out</a>
+      <a href="${request.application_url}/history">Transaction History</a>
+      <a href="${request.application_url}/dhistory">Donation History</a>
+      <a href="${request.application_url}/statistics">Statistics</a>
+  <div>
+    <span>
+        <h1>Seller</h1><p tal:content='msg' style="font-size:12px;"/>
+    <span>
+    <form method="post" action="seller">
+        <span>
+            <p>Quantity of Box<br/>
+                <input type="button" value="-" name='boxDec' onclick="decrease('boxQnt')" class="qntCont" />
+                <input type="number" min=0 max=300 value=0 name="boxQuantity" ID="boxQnt" />
+                <input type="button" value="+" name='boxInc' onclick="increase('boxQnt')" class="qntCont" />
+            </p>
+        </span>
+        <span>
+            <p>Quantity of Doughnut<br/>
+                <input type="button" value="-" name='dDec' onClick="decrease('dQnt')" class="qntCont" />
+                <input type="number" min=0 max=3600 value=0 name="doughnutQuantity" ID="dQnt"/>
+                <input type="button" value="+" name='dInc' onClick="increase('dQnt')" class="qntCont" />
+            </p>
+        </span>
+        <span>
+            <p>Price Scheme<br/>
+                <input type="button" value="-" name='dDec' onClick="decrease('scheme')" class="qntCont" />
+                <input type="number" min=0 max=100 value=2 name="scheme" ID="scheme"/>
+                <input type="button" value="+" name='dInc' onClick="increase('scheme')" class="qntCont" />
+            </p>
+        </span>
+        <span>
+            <p>Donation
+                <p style="font-size:15px;">Amount: $
+                <input type="number" min=0 max=1000000 step='any' name="donation" ID="donation" /><br/>
+                Donor:
+                <input type="text" ID="donor" name='donor' /></p>
+            </p>
+        </span>
+        <span style="font-size:15px;"><input type="checkbox" name="defer" value=0 class="defer">Defer Payment</span><br><br>
+        <span>
+            <input type="submit" value="Submit" name="submit" class="etc" />
+            <input type="button" value="Reset" onClick="reset()" class="etc" />
+        </span>
+    </form>
+  </div>
+</body>
+</html>
