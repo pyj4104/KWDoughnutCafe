@@ -1,3 +1,0 @@
-include ./KWDoughnutInventorySystem/security/*
-include ./KWDoughnutInventorySystem/model/*
-include ./KWDoughnutInventorySystem/view/*

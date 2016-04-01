@@ -1,7 +1,0 @@
-setup.py
-DoughnutSystem.egg-info/PKG-INFO
-DoughnutSystem.egg-info/SOURCES.txt
-DoughnutSystem.egg-info/dependency_links.txt
-DoughnutSystem.egg-info/entry_points.txt
-DoughnutSystem.egg-info/requires.txt
-DoughnutSystem.egg-info/top_level.txt
