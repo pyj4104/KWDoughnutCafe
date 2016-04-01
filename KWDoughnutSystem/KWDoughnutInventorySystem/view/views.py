@@ -18,6 +18,9 @@ class WikiPage(colander.MappingSchema):
     )
 
 class WikiViews(object):
+    initBoxes = 0
+    inv = 0
+
     def __init__(self, request):
         self.request = request
 
@@ -128,22 +131,21 @@ class WikiViews(object):
                 PriceScheme.boxPrice, PriceScheme.doughnutPrice).join(PriceScheme).filter(TransHistory.deleted==0).group_by(PriceScheme.tid).all()
             douhnutsSoldToday = DBSession.query(func.sum(TransHistory.boxesSold)).filter(TransHistory.deleted==0).filter(TransHistory.timeSold >= datetime.today().date()).scalar()
             donatedAmount = DBSession.query(func.sum(Donation.amount)).filter(Donation.deleted==0).scalar()
-            initBoxes = 300
+            donatedAmount = 0.0 if donatedAmount is None else donatedAmount
             boxSold = 0
             doughnutsSold = 0
             profit = 0
-            inv = 1425
             moneyEarned = 0
             for scheme in stats:
                 boxSold += scheme[0]
                 doughnutsSold += scheme[1]
                 moneyEarned += scheme[0] * decimal.Decimal(scheme[2]) + scheme[1] * decimal.Decimal(scheme[3])
             openedBoxes = math.ceil(doughnutsSold / 12)
-            boxesLeft = initBoxes - boxSold - openedBoxes
-            profit = float(moneyEarned-inv)
-            return {'initBoxes':initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
+            boxesLeft = self.initBoxes - boxSold - openedBoxes
+            profit = float(moneyEarned-self.inv)
+            return {'initBoxes':self.initBoxes, 'soldBoxes':boxSold, 'soldDoughnuts':doughnutsSold,
             'openBoxes':openedBoxes, 'boxesLeft':boxesLeft, 'monEarned':locale.currency(moneyEarned),
-            'inv':locale.currency(inv), 'doughnutprofit':locale.currency(profit), 'soldToday':douhnutsSoldToday, 'donation':locale.currency(donatedAmount),
+            'inv':locale.currency(self.inv), 'doughnutprofit':locale.currency(profit), 'soldToday':douhnutsSoldToday, 'donation':locale.currency(donatedAmount),
             'profit':locale.currency(profit+donatedAmount)}
         else:
             return HTTPFound(self.request.route_url('login'))
